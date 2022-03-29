@@ -1,0 +1,54 @@
+---------MUHAMMAD ADIL------------------------------------------
+-----------------UEA ID : 100340782---------------------------------------
+
+---------------EXAM TABLE----------------------------------------------
+
+CREATE TABLE exam (
+    excode       CHAR(4) NOT NULL,
+    extitle      VARCHAR(20) UNIQUE NOT NULL,
+    exlocation   VARCHAR(20) NOT NULL,
+    exdate       DATE NOT NULL CHECK (exdate BETWEEN DATE '2022-06-01' AND DATE '2022-06-30'),
+    extime       TIME NOT NULL CHECK (extime  BETWEEN TIME '09:00:00' AND TIME '18:00:00'),
+	CONSTRAINT exam_pk PRIMARY KEY (excode)
+);
+
+----------------------------------STUDENT TABLE----------------------------------------
+
+CREATE TABLE student (
+    sno          INTEGER NOT NULL,
+    sname        VARCHAR(20) NOT NULL,
+    semail       VARCHAR(20) UNIQUE NOT NULL,
+	CONSTRAINT student_pk PRIMARY KEY (sno));
+
+-----------------------------------ENTRY TABLE---------------------------------------
+
+CREATE TABLE entry (
+    eno          INTEGER NOT NULL,
+    excode       CHAR(4) NOT NULL,
+    sno          INTEGER  NOT NULL,
+    egrade       DECIMAL(5,2) DEFAULT NULL CHECK (egrade BETWEEN DECIMAL '0.00' AND DECIMAL '100.00'),
+	CONSTRAINT entry_pk PRIMARY KEY (eno),
+	CONSTRAINT entry_fk1 FOREIGN KEY (excode) REFERENCES exam ON DELETE RESTRICT ON UPDATE CASCADE,
+	CONSTRAINT entry_fk2 FOREIGN KEY (sno) REFERENCES student ON DELETE CASCADE ON UPDATE CASCADE);
+
+-----------------CANCEL TABLE--------------------------------------
+CREATE TABLE cancel (
+    eno          INTEGER NOT NULL,
+    excode       CHAR(4) NOT NULL,
+    sno          INTEGER NOT NULL,
+	cdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	cuser VARCHAR(128) DEFAULT CURRENT_USER NOT NULL,
+	CONSTRAINT cancel_pk PRIMARY KEY (eno, cdate));  
+--------------------------------FOR PART c-------------------------------------------------------
+
+--trigger 
+CREATE TRIGGER student_to_cancelled_entr
+BEFORE DELETE ON student FOR EACH ROW execute procedure cancelled_enteries ();
+--------------------------------FOR PART e------------------------------------------------------------
+
+
+CREATE TRIGGER validate_entry_table
+BEFORE INSERT ON entry
+FOR EACH ROW
+execute procedure entry_table_trigger_method();
+---------------------------------------------------------------------------------

@@ -1,0 +1,124 @@
+--------PART a----------------
+INSERT INTO student VALUES (600,'Peterson,J','PeteJ@myhome.com')
+
+-----------PART b---------------------------------
+INSERT INTO exam VALUES ('VB03','Visual Basic 3','London','2022-06-03','09:00')
+
+------------------------PART c-------------------------------------
+
+DELETE FROM student WHERE sno='200';
+------------------------
+----------------------------------------------PART d---------------------------------------------------
+DELETE FROM exam WHERE excode='VBO1';
+DELETE FROM exam WHERE excode='SQL1';
+------------------------------------PART e-------------------------------------------------------
+
+INSERT INTO entry(eno, excode, sno)
+
+    VALUES ((SELECT COALESCE(MAX(eno),0) FROM entry) + 1, 'VB03', 100);
+--------------------------------PART f--------------------------------------------------------------------
+
+UPDATE entry set egrade= 60 WHERE eno=10 and excode='VB03' and sno=100;
+
+----------------------------PART P---------------------------------
+SELECT s.sname,ex.exlocation,ex.excode,ex.extitle,ex.exdate,ex.extime FROM student as s JOIN entry as ent ON
+s.sno=ent.sno JOIN exam as ex ON ex.excode=ent.excode WHERE s.sno=100 
+
+SELECT s.sname,ex.exlocation,ex.excode,ex.extitle,ex.exdate,ex.extime FROM student as s JOIN entry as ent ON
+s.sno=ent.sno JOIN exam as ex ON ex.excode=ent.excode WHERE s.sno=200 
+
+-------------------PART q-------------------------------------
+SELECT ex.excode,s.sname, CASE
+        when ent.egrade<50 then 'FAIL'
+        when ent.egrade>=50 and ent.egrade<70 then 'PASS'
+        when ent.egrade>=70 then 'DISTINCTION'
+        when ent.egrade is null then 'NOT TAKEN'
+    END AS results FROM entry as ent, student as s, exam as ex where s.sno = ent.sno and ent.excode = ex.excode
+	order by ex.excode, s.sname
+
+-- -------------------------------------------------------PART R------------------------------
+SELECT ex.excode,s.sname, CASE
+        when ent.egrade<50 then 'FAIL'
+        when ent.egrade>=50 and ent.egrade<70 then 'PASS'
+        when ent.egrade>=70 then 'DISTINCTION'
+        when ent.egrade is null then 'NOT TAKEN'
+    END AS results FROM entry as ent, student as s, exam as ex where s.sno = ent.sno and ent.excode = ex.excode and ex.excode = 'VB01'
+	order by ex.excode, s.sname
+
+-------------------------------PART (s)--------------------------------------------------------
+SELECT s.sname,ex.excode,ex.extitle,ent.egrade FROM student as s JOIN entry as ent ON
+s.sno=ent.sno JOIN exam as ex ON ex.excode=ent.excode WHERE ent.egrade is not null and s.sno=100 order by ex.excode;
+
+----------------------PART (t) ------------------------------------------------------
+
+select sname , membership_status(sno) from student where sno = 100
+select sname , membership_status(sno) from student where sno = 200
+
+--------------------PART (v)--------------------------------------------------------------
+
+SELECT * FROM cancel where sno=200
+---------------------
+FUNCTIONS
+---------------------
+---------------------------
+-----FOR PART c
+CREATE OR REPLACE FUNCTION cancelled_enteries()
+RETURNS TRIGGER
+AS $$
+BEGIN
+
+IF( SELECT sno FROM entry WHERE sno = old.sno limit 1) IS NOT NULL THEN
+INSERT INTO cancel (sno,excode, eno ) SELECT sno, excode, eno  FROM entry WHERE sno = old.sno;
+END IF;
+RETURN old;
+END
+$$ LANGUAGE PLPGSQL;
+-------------------------FOR Part e
+CREATE OR REPLACE FUNCTION entry_table_trigger_method()
+RETURNS TRIGGER
+AS $$
+DECLARE
+exam_date DATE;
+BEGIN
+exam_date = (select exdate from exam where excode=new.excode);
+IF(select eno from entry where sno= new.sno and
+excode IN (select excode from exam where exdate=exam_date
+) limit 1
+) IS NOT NULL THEN
+raise exception 'Already have an exam on same date';
+END IF;
+RETURN new;
+END
+$$ LANGUAGE PLPGSQL;
+-------------------------------------FOR Part t
+CREATE OR REPLACE FUNCTION membership_status(integer)
+RETURNS VARCHAR(20)
+AS $$
+DECLARE
+cal_counts Integer;
+cal_avges Decimal;
+status VARCHAR(20);
+BEGIN
+	cal_counts = (select count(ent.sno) from entry as ent, student as s, exam as ex
+					where s.sno = $1 and ent.sno = s.sno and ent.egrade is not null
+					and ent.excode = ex.excode and EXTRACT(YEAR FROM ex.exdate) = 2022);
+	cal_avges = (select avg(ent.egrade) from entry as ent, student as s, exam as ex
+					where s.sno = $1 and ent.sno = s.sno and ent.egrade is not null
+					and ent.excode = ex.excode and EXTRACT(YEAR FROM ex.exdate) = 2022);
+	status = 'Pending';
+	IF(cal_counts >= 4 and cal_avges >= 50) THEN
+		status = 'Accredited';
+	END IF;
+RETURN status;
+END
+$$ LANGUAGE PLPGSQL;
+--------------------------------------------------------------------------------------------------------------- 
+
+
+
+
+
+
+
+
+

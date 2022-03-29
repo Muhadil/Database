@@ -1,0 +1,24 @@
+update or delete on table "exam" violates foreign key constraint "entry_fk1" on table "entry"
+DETAIL:  Key (excode)=(VB01) is still referenced from table "entry".
+
+duplicate key value violates unique constraint "student_pk"
+DETAIL:  Key (sno)=(100) already exists.
+
+new row for relation "exam" violates check constraint "exam_exdate_check"
+DETAIL:  Failing row contains (VB03, Visual Basic 3, London, 2022-05-02, 19:00:00).
+
+Already have an exam on same date
+CONTEXT:  PL/pgSQL function entry_table_trigger_method() line 10 at RAISE
+
+1 ROWS INSERTED
+
+Already have an exam on same date
+CONTEXT:  PL/pgSQL function entry_table_trigger_method() line 10 at RAISE
+
+0 ROWS HAS BEEN UPDATED
+
+new row for relation "entry" violates check constraint "entry_egrade_check"
+DETAIL:  Failing row contains (9, VB01, 300, 110.00).
+
+[] QUERY EXECUTED SUCCESSFULY
+

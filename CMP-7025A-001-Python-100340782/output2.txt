@@ -1,0 +1,36 @@
+[('Smith, A.', 'London', 'VB01', 'Visual Basic 1', datetime.date(2022, 6, 1), datetime.time(9, 0)),
+ ('Smith, A.', 'London', 'VB02', 'Visual Basic 2', datetime.date(2022, 6, 2), datetime.time(18, 0)),
+ ('Smith, A.', 'Norwich', 'XQ02', 'Xquery 2', datetime.date(2022, 6, 3), datetime.time(9, 0)),
+ ('Smith, A.', 'London', 'PMAN', 'Project Management', datetime.date(2022, 6, 4), datetime.time(9, 0))] QUERY EXECUTED SUCCESSFULY
+
+[('Brown, B.', 'London', 'VB02', 'Visual Basic 2', datetime.date(2022, 6, 2), datetime.time(18, 0)),
+ ('Brown, B.', 'Norwich', 'SQL1', 'SQL 1', datetime.date(2022, 6, 1), datetime.time(9, 0)),
+ ('Brown, B.', 'Norwich', 'XQ02', 'Xquery 2', datetime.date(2022, 6, 3), datetime.time(9, 0)),
+ ('Brown, B.', 'London', 'PMAN', 'Project Management', datetime.date(2022, 6, 4), datetime.time(9, 0))] QUERY EXECUTED SUCCESSFULY
+
+[('PMAN', 'Brown, B.', 'NOT TAKEN'), ('PMAN', 'Smith, A.', 'PASS'),
+ ('SQL1', 'Brown, B.', 'DISTINCTION'), ('VB01', 'Green, C.', 'NOT TAKEN'),
+ ('VB01', 'Smith, A.', 'PASS'), ('VB02', 'Brown, B.', 'FAIL'),
+ ('VB02', 'Smith, A.', 'PASS'), ('XQ02', 'Brown, B.', 'NOT TAKEN'), ('XQ02', 'Smith, A.', 'FAIL')]
+
+[('VB01', 'Green, C.', 'NOT TAKEN'), ('VB01', 'Smith, A.', 'PASS')] 
+
+[(100, 'Smith, A.', 'PMAN', 'Project Management', Decimal('50.00')),
+ (100, 'Smith, A.', 'VB01', 'Visual Basic 1', Decimal('50.00')),
+ (100, 'Smith, A.', 'VB02', 'Visual Basic 2', Decimal('55.00')), (100, 'Smith, A.', 'XQ02', 'Xquery 2', Decimal('45.00'))] 
+[(200, 'Brown, B.', 'SQL1', 'SQL 1', Decimal('90.00')),
+ (200, 'Brown, B.', 'VB02', 'Visual Basic 2', Decimal('20.00'))] 
+
+[('Smith, A.', 'Accredited')]
+
+
+[('Brown, B.', 'Pending')]
+
+
+[]
+1 ROWS HAS BEEN DELETED
+
+[(7, 'XQ02', 200, datetime.datetime(2021, 12, 14, 13, 0, 37, 194079), 'postgres'),
+ (8, 'PMAN', 200, datetime.datetime(2021, 12, 14, 13, 0, 37, 194079), 'postgres'),
+ (5, 'SQL1', 200, datetime.datetime(2021, 12, 14, 13, 0, 37, 194079), 'postgres'),
+ (6, 'VB02', 200, datetime.datetime(2021, 12, 14, 13, 0, 37, 194079), 'postgres')]
